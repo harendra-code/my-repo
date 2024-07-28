@@ -131,50 +131,11 @@ gulp.task("build", gulp.series(gulp.parallel('css:minify', 'js:minify', 'vendor'
 gulp.task("default", gulp.series("clean", 'build', 'replaceHtmlBlock'));
 
 
-// Default task
-
-gulp.task('clean', function() {
-  return del(['dist', 'assets/css/app.css']);
-});
-
-
-gulp.task('scss', gulp.series('bootstrap:scss', function compileScss() {
-  return gulp.src(['assets/scss/*.scss'])
-    .pipe(sass.sync({
-      outputStyle: 'expanded'
-    }).on('error', sass.logError))
-    .pipe(autoprefixer())
-    .pipe(gulp.dest('assets/css'))
-    .pipe(browserSync.stream());
-}));
-
-
-gulp.task('js:minify', function () {
-  return gulp.src([
-    'assets/js/app.js'
-  ])
-    .pipe(uglify())
-    .pipe(rename({
-      suffix: '.min'
+gulp.task('replaceHtmlBlock', function () {
+  return gulp.src(['*.html'])
+    .pipe(htmlreplace({
+      'css': '/my-repo/assets/css/app.min.css',
+      'js': '/my-repo/assets/js/app.min.js'
     }))
-    .pipe(gulp.dest('./dist/assets/js'))
-    .pipe(browserSync.stream());
-});
-
-gulp.task('dev', function browserDev(done) {
-  browserSync.init({
-    server: {
-      baseDir: "./"
-    }
-  });
-  gulp.watch(['assets/scss/*.scss','assets/scss/**/*.scss','!assets/scss/bootstrap/**'], gulp.series('scss', function cssBrowserReload (done) {
-    browserSync.reload();
-    done(); //Async callback for completion.
-  }));
-  gulp.watch('assets/js/app.js', gulp.series('js:minify', function jsBrowserReload (done) {
-    browserSync.reload();
-    done();
-  }));
-  gulp.watch(['*.html']).on('change', browserSync.reload);
-  done();
+    .pipe(gulp.dest('dist/'));
 });
