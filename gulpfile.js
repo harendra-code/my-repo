@@ -22,7 +22,7 @@ gulp.task('vendor:js', function() {
     './node_modules/bootstrap/dist/js/*',
     './node_modules/@popperjs/core/dist/umd/popper.*'
   ])
-    .pipe(gulp.dest('./assets/js/vendor'));
+    .pipe(gulp.dest('assets/js/vendor'));
 });
 
 // Copy bootstrap-icons from node_modules into /fonts
@@ -32,7 +32,7 @@ gulp.task('vendor:fonts', function() {
     '!./node_modules/bootstrap-icons/package.json',
     '!./node_modules/bootstrap-icons/README.md',
   ])
-    .pipe(gulp.dest('./assets/fonts/bootstrap-icons'))
+    .pipe(gulp.dest('assets/fonts/bootstrap-icons'))
 });
 
 // vendor task
@@ -41,33 +41,33 @@ gulp.task('vendor', gulp.parallel('vendor:fonts', 'vendor:js'));
 // Copy vendor's js to /dist
 gulp.task('vendor:build', function() {
   var jsStream = gulp.src([
-    './assets/js/vendor/bootstrap.bundle.min.js',
-    './assets/js/vendor/popper.min.js'
+    'assets/js/vendor/bootstrap.bundle.min.js',
+    'assets/js/vendor/popper.min.js'
   ])
     .pipe(gulp.dest('./dist/assets/js/vendor'));
-  var fontStream = gulp.src(['./assets/fonts/bootstrap-icons/**/*.*']).pipe(gulp.dest('./dist/assets/fonts/bootstrap-icons'));
+  var fontStream = gulp.src(['assets/fonts/bootstrap-icons/**/*.*']).pipe(gulp.dest('./dist/assets/fonts/bootstrap-icons'));
   return merge (jsStream, fontStream);
 })
 
 // Copy Bootstrap SCSS(SASS) from node_modules to /assets/scss/bootstrap
 gulp.task('bootstrap:scss', function() {
   return gulp.src(['./node_modules/bootstrap/scss/**/*'])
-    .pipe(gulp.dest('./assets/scss/bootstrap'));
+    .pipe(gulp.dest('assets/scss/bootstrap'));
 });
 
 // Compile SCSS(SASS) files
 gulp.task('scss', gulp.series('bootstrap:scss', function compileScss() {
-  return gulp.src(['./assets/scss/*.scss'])
+  return gulp.src(['assets/scss/*.scss'])
     .pipe(sass.sync({
       outputStyle: 'expanded'
     }).on('error', sass.logError))
     .pipe(autoprefixer())
-    .pipe(gulp.dest('./assets/css'))
+    .pipe(gulp.dest('assets/css'))
 }));
 
 // Minify CSS
 gulp.task('css:minify', gulp.series('scss', function cssMinify() {
-  return gulp.src("./assets/css/*.css")
+  return gulp.src("assets/css/*.css")
     .pipe(cleanCSS())
     .pipe(rename({
       suffix: '.min'
@@ -79,7 +79,7 @@ gulp.task('css:minify', gulp.series('scss', function cssMinify() {
 // Minify Js
 gulp.task('js:minify', function () {
   return gulp.src([
-    './assets/js/app.js'
+    'assets/js/app.js'
   ])
     .pipe(uglify())
     .pipe(rename({
