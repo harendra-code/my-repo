@@ -1,3 +1,12 @@
+$base-url: '/my-repo/';
+
+// Assuming SCSS compiles to CSS in the same directory structure
+// body {
+//   background-image: url('#{$base-url}assets/images/background.png');
+// }
+
+
+
 // Custom bootstrap variable overrides
 @import "bootstrap_variable_overrides";
 
